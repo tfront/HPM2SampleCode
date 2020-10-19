@@ -43,16 +43,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -226,14 +217,20 @@ public class HPMHelper {
 		params.put("url", url);
         params.put("paymentGateway", page.getPaymentGateway());
         // For 3DS test
-        params.put("authorizationAmount", "36");
         params.put("field_passthrough1", "Test_Value_Passthrough1");
         params.put("field_passthrough2", "Test_Value_Passthrough2");
         // For CCRef
 		params.put("param_supportedTypes", "AmericanExpress,JCB,Visa,MasterCard,Discover");
 		// Page Id is required to Regenerate signature and token, and regenerate signature is required when reCAPTCHA function is enabled and when submit failed in button out model.
 		params.put("field_passthrough3", page.getPageId());
-		
+		params.put("doPayment", "true");
+//		params.put("accountId", "402881b874b543170174b96054130000");
+		params.put("field_accountId", "402881b874b543170174b96054130000");
+//		params.put("authorizationAmount", "88");
+		params.put("documentType", "invoice-number");
+		params.put("documentId", "INV00000011");
+		params.put("storePaymentMethod", "false");
+
         for (Iterator<String> iterator = prepopulateFields.keySet().iterator(); iterator.hasNext(); ) {
 			String key = iterator.next();
 	    	String value = prepopulateFields.get(key);
@@ -259,7 +256,6 @@ public class HPMHelper {
 			}
 		}
 	}
-	
 	public static JSONObject generateSignature(String pageId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		PostMethod postRequest = new PostMethod(endPoint);  
@@ -304,9 +300,12 @@ public class HPMHelper {
 	    if(url.toLowerCase().indexOf("https") >= 0) {
 	    	Protocol.registerProtocol("https", new Protocol("https", new BypassSSLSocketFactory(), DEFAULT_HTTPS_PORT));
 	    }
+	    Map<String, String> parameters = new HashMap<>();
+	    parameters.put("accountId", "402881b874b543170174b96054130000");
 	    json.put("uri", url);
 	    json.put("method","POST");
 	    json.put("pageId", pageId);
+	    json.put("accountId", "402881b874b543170174b96054130000");
 	    return json.toString();
 	}
 		
@@ -376,7 +375,8 @@ public class HPMHelper {
 		    // We can leverage FieldDecrypter to decrypt paygeId and refId.
 			String pageId = FieldDecrypter.decrypt(request.getParameter("pageId"), publicKeyString );
 			String paymentMethodId = FieldDecrypter.decrypt(request.getParameter("refId"), publicKeyString);
-			
+			String paymentId = FieldDecrypter.decrypt(request.getParameter("PaymentId"), publicKeyString);
+
 			System.out.println("Charset:" + request.getCharacterEncoding() );
 			System.out.println("QueryString:" + request.getQueryString() );
 			boolean isSignatureValid = SignatureDecrypter.verifyAdvancedSignature(request, callbackURL, publicKeyString);
