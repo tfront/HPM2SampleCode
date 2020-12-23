@@ -24,7 +24,9 @@ String newSignatureStr = "";
 			try {
 				// The following codes are only necessary when HPM reCAPTCHA function is enabled. 
 				// When it’s enabled, the token can only be used one time. So you need to re-generate signature if want to re-render hosted page.
-				JSONObject newSignature = HPMHelper.generateSignature((String)request.getParameter("field_passthrough3"));
+				HPMHelper.HPMPage hpmPage = HPMHelper.getPageById(request.getParameter("field_passthrough3"));
+				JSONObject newSignature = HPMHelper.generateSignature(request.getParameter("field_passthrough3"),
+						hpmPage != null ? HPMHelper.handleDynamicParam(hpmPage.getCustomSignatureParams(), null) : null);
 				newToken = newSignature.getString("token");
 				newSignatureStr = newSignature.getString("signature");
 			} catch(Exception e) {

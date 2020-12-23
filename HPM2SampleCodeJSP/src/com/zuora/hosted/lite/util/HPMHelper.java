@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -96,7 +97,11 @@ public class HPMHelper {
 	}
 	
 	public static HPMPage getPage(String pageName) {
-		return pages.get(pageName);
+		return pages.get(pageName)
+	}
+
+	public static HPMPage getPageById(String pageId) {
+		return pages.get("page" + pageId);
 	}
 	
 	public static String getJsVersion() {
@@ -113,7 +118,7 @@ public class HPMHelper {
 	public static void setJsPath(String jsPathStr) {
 		jsPath = jsPathStr;
 	}
-	public static void createHPMPage(String pageName, String pageId, String gateway, List<String> locales, String username, String password, String publicKeyStr, String endPoint, String url, String accountId, String gwOption,String javascriptPath) {
+	public static void createHPMPage(String pageName, String pageId, String gateway, List<String> locales, String username, String password, String publicKeyStr, String endPoint, String url, String accountId, String gwOption,String javascriptPath, String customParams, String customSignatureParams) {
 		HPMPage page = new HPMPage();
 		page.setPageId(pageId);
 		page.setPaymentGateway(gateway);
@@ -125,6 +130,8 @@ public class HPMHelper {
 		page.setUrl(url);
 		page.setAccountId(accountId);
 		page.setGWOption(gwOption);
+		page.setCustomParams(customParams);
+		page.setCustomSignatureParams(customSignatureParams);
 		if(javascriptPath !=null && !javascriptPath.isEmpty()){
 			page.setJavascriptPath(javascriptPath);
 			Pattern pattern = Pattern.compile(".+hosted/(.+)/zuora.+");
@@ -198,6 +205,8 @@ public class HPMHelper {
 		private String gwOption = "";
 		private String javascriptPath="";
 		private String javascriptVersion="";
+		private String customParams = "";
+		private String customSignatureParams = "";
 
 
 		public String getPageId() {
@@ -296,6 +305,22 @@ public class HPMHelper {
 			this.gwOption = gwOption;
 		}
 
+		public String getCustomParams() {
+			return customParams;
+		}
+
+		public String getCustomSignatureParams() {
+			return customSignatureParams;
+		}
+
+		public void setCustomParams(String customParams) {
+			this.customParams = customParams;
+		}
+
+		public void setCustomSignatureParams(String customSignatureParams) {
+			this.customSignatureParams = customSignatureParams;
+		}
+
 		public HPMPage() {
 			pageId = "";
 			paymentGateway = "";
@@ -371,6 +396,9 @@ public class HPMHelper {
 		if(page == null) {
 			throw new Exception("Could not find Hosted Page configurations for " + pageName);
 		}
+
+		params = handleDynamicParam(page.getCustomParams(), params);
+		Map<String, String>  signatureParams = handleDynamicParam(page.getCustomSignatureParams(), null);
 		
 		JSONObject result = generateSignature(page.getPageId());
 
@@ -431,15 +459,19 @@ public class HPMHelper {
 			}
 		}
 	}
-	
+
 	public static JSONObject generateSignature(String pageId) throws Exception {
+		return generateSignature(pageId, null);
+	}
+
+	public static JSONObject generateSignature(String pageId, Map<String, String> signatureParams) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		PostMethod postRequest = new PostMethod(HPMHelper.getEndPoint(pageId));
     	postRequest.addRequestHeader("apiAccessKeyId", HPMHelper.getUserName(pageId));
     	postRequest.addRequestHeader("apiSecretAccessKey", HPMHelper.getPassword(pageId));
     	postRequest.addRequestHeader("Accept", "application/json");
     	
-    	RequestEntity requestEntity = new StringRequestEntity(buildJsonRequest(pageId), "application/json", "UTF-8");
+    	RequestEntity requestEntity = new StringRequestEntity(buildJsonRequest(pageId, signatureParams), "application/json", "UTF-8");
         postRequest.setRequestEntity(requestEntity);
         
         // Re-try 10 times in case the server is too busy to give you response in time.
@@ -471,7 +503,7 @@ public class HPMHelper {
 	    return result;
 	}
 	
-	private static String buildJsonRequest(String pageId) throws NullPointerException, JSONException {
+	private static String buildJsonRequest(String pageId, String> signatureParams) throws NullPointerException, JSONException {
 	    JSONObject json = new JSONObject();
 		String url = HPMHelper.getUrl(pageId);
 	    if(url.toLowerCase().indexOf("https") >= 0) {
@@ -480,6 +512,11 @@ public class HPMHelper {
 	    json.put("uri", url);
 	    json.put("method","POST");
 	    json.put("pageId", pageId);
+		if (signatureParams != null) {
+			for (Map.Entry<String, String> entry : signatureParams.entrySet()) {
+				json.put(entry.getKey(), entry.getValue());
+			}
+		}
 	    return json.toString();
 	}
 		
@@ -596,4 +633,27 @@ public class HPMHelper {
 			}
 	}
 
+	public static Map<String, String> handleDynamicParam(String b64Str, Map<String, String> collection) throws IOException, JSONException {
+		Map<String, String> ret = collection;
+		if (ret == null) {
+			ret = new HashMap<>();
+		}
+		if (StringUtils.isNotBlank(b64Str)) {
+			Map<String, String> params = HPMHelper.decodeParamString(b64Str);
+			ret.putAll(params);
+		}
+		return ret;
+	}
+
+	private static Map<String, String> decodeParamString(String jsonString) throws IOException, JSONException {
+		Map<String, String> mapReturn = new HashMap<>();
+		JSONObject json = new JSONObject(jsonString);
+		Iterator<String> iterator = json.keys();
+		while (iterator.hasNext()) {
+			String key = (String) iterator.next();
+			String value = json.getString(key);
+			mapReturn.put(key, value);
+		}
+		return mapReturn;
+	}
 }

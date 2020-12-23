@@ -11,7 +11,20 @@
 	if (request.getParameter("PAGE_PAGEID")!=null && request.getParameter("USERNAME")!=null && request.getParameter("PASSWORD")!=null && request.getParameter("PUBLIC_KEY")!=null && request.getParameter("ENDPOINT")!=null && request.getParameter("URL")!=null) {
 		String pageId = request.getParameter("PAGE_PAGEID");
 		String pageName = "page" + pageId;
-		HPMHelper.createHPMPage(pageName,pageId,"", Arrays.asList("en"), request.getParameter("USERNAME"), request.getParameter("PASSWORD"), request.getParameter("PUBLIC_KEY"), request.getParameter("ENDPOINT"), request.getParameter("URL"), request.getParameter("ACCOUNTID"), request.getParameter("GWOPTION"),request.getParameter("JSPATH"));
+		HPMHelper.createHPMPage(pageName,pageId,
+				"",
+				Arrays.asList("en"),
+				request.getParameter("USERNAME"),
+				request.getParameter("PASSWORD"),
+				request.getParameter("PUBLIC_KEY"),
+				request.getParameter("ENDPOINT"),
+				request.getParameter("URL"),
+				request.getParameter("ACCOUNTID"),
+				request.getParameter("GWOPTION"),
+				request.getParameter("JSPATH"),
+				request.getParameter("CUSTOMPARAMS"),
+				request.getParameter("CUSTOMSIGNATUREPARAMS")
+		);
 	}
 %>
 <!DOCTYPE html>
@@ -99,9 +112,22 @@ function saveConfig() {
 	var accountid = encodeURIComponent(document.getElementById("accountid").value);
 	var gwOption = encodeURIComponent(document.getElementById("gwOption").value);
 	var jsPath = encodeURIComponent(document.getElementById("jsPath").value);
+	var customParams = encodeURIComponent(document.getElementById("customParams").value);
+	var customSignatureParams = encodeURIComponent(document.getElementById("customSignatureParams").value);
 
-	window.location.replace("HomepageWithReconfig.jsp?URL="+url+"&ENDPOINT="+endpoint+"&CALLBACK_URL="+callbackurl+"&USERNAME="+username
-			+"&PASSWORD="+password+"&PUBLIC_KEY="+publickey+"&PAGE_PAGEID="+page_pageid+"&ACCOUNTID="+accountid+"&GWOPTION="+gwOption+"&JSPATH="+jsPath);
+	window.location.replace("HomepageWithReconfig.jsp?URL="+url
+			+"&ENDPOINT="+endpoint
+			+"&CALLBACK_URL="+callbackurl
+			+"&USERNAME="+username
+			+"&PASSWORD="+password
+			+"&PUBLIC_KEY="+publickey
+			+"&PAGE_PAGEID="+page_pageid
+			+"&ACCOUNTID="+accountid
+			+"&GWOPTION="+gwOption
+			+"&JSPATH="+jsPath
+			+"&CUSTOMPARAMS="+customParams
+			+"&CUSTOMSIGNATUREPARAMS="+customSignatureParams
+	);
 }
 
 </script>
@@ -120,6 +146,8 @@ function saveConfig() {
 		<span style="display:inline-block;width:200px;text-align:right;">ACCOUNT_ID:</span><input type="text" name="style" style="width:300px" id="accountid"/><br>
 		<span style="display:inline-block;width:200px;text-align:right;">GATEWAY_OPTION:</span><input type="text" name="style" style="width:300px" id="gwOption"/><br>
 		<span style="display:inline-block;width:200px;text-align:right;">JS_PATH:</span><input type="text" name="style" style="width:300px" id="jsPath"/><br>
+		<span style="display:inline-block;width:200px;text-align:right;">CustomParams:</span><input type="text" name="style" style="width:300px" id="customParams"/><br>
+		<span style="display:inline-block;width:200px;text-align:right;">CustomSignatureParams:</span><input type="text" name="style" style="width:300px" id="customSignatureParams"/><br>
 		<button type="button" onclick="saveConfig()" style="width: 150px; height: 24px; margin-left: 200px;">Save new config</button><br>
 	</div>
 	<div class="firstTitle"><font size="5">Please select the Hosted Page:</font></div>
