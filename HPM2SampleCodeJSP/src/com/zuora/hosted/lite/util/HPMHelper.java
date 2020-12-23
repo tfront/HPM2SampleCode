@@ -400,7 +400,7 @@ public class HPMHelper {
 		params = handleDynamicParam(page.getCustomParams(), params);
 		Map<String, String>  signatureParams = handleDynamicParam(page.getCustomSignatureParams(), null);
 		
-		JSONObject result = generateSignature(page.getPageId());
+		JSONObject result = generateSignature(page.getPageId(), signatureParams);
 
 		params.put("url", HPMHelper.getUrl(page.getPageId()));
 		params.put("tenantId", result.getString("tenantId"));
@@ -426,7 +426,7 @@ public class HPMHelper {
 		}
 
 		// For 3DS test
-        params.put("authorizationAmount", "36");
+//        params.put("authorizationAmount", "36");
 //        params.put("field_passthrough1", "Test_Value_Passthrough1");
 //        params.put("field_passthrough2", "Test_Value_Passthrough2");
         // For CCRef
