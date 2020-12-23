@@ -97,7 +97,7 @@ public class HPMHelper {
 	}
 	
 	public static HPMPage getPage(String pageName) {
-		return pages.get(pageName)
+		return pages.get(pageName);
 	}
 
 	public static HPMPage getPageById(String pageId) {
@@ -503,7 +503,7 @@ public class HPMHelper {
 	    return result;
 	}
 	
-	private static String buildJsonRequest(String pageId, String> signatureParams) throws NullPointerException, JSONException {
+	private static String buildJsonRequest(String pageId, Map<String, String> signatureParams) throws NullPointerException, JSONException {
 	    JSONObject json = new JSONObject();
 		String url = HPMHelper.getUrl(pageId);
 	    if(url.toLowerCase().indexOf("https") >= 0) {
