@@ -115,18 +115,18 @@ function saveConfig() {
 	var customParams = encodeURIComponent(document.getElementById("customParams").value);
 	var customSignatureParams = encodeURIComponent(document.getElementById("customSignatureParams").value);
 
-	endpoint = encodeURIComponent("https://apisandbox.zuora.com/apps/v1/rsa-signatures");
-	url = encodeURIComponent("https://apisandbox.zuora.com/apps/PublicHostedPageLite.do");
-	// callbackurl = encodeURIComponent("/HPM2SampleCodeJSP/Callback.jsp");
-	username = encodeURIComponent("dhan@zuora.com");
-	password = encodeURIComponent("J2m_:2LM2gMiupz");
-	publickey = encodeURIComponent("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsxXAXFZPpk+LTgU+OGVVBeReVfDHiTLXDXwxq4M0DpLDXKNyAb3z6anxUu4l6e5YcJpDEk4E+afI0vuFJTtNHm25DCyc+wrakVrlfZBrWOEPnQQ5da9v7iRlXl6rZM0gcCayQMM4RYQKQ8dCildSvtbmH3n4sr92VcObw67aK8odDlOe2pIPI2oG4V38Fvm7E5dAmLGqiYKCBeIuY1EjQ9DF2Ml75o2dhS+bVLjkjh34Z8vOXVOUoaVev6pR0ta8yhlKaKd1QZ3e9FxAY9JLmWwCcZwOJa/WXr4z41saSKXGQypiEUJ25yuF+uVbcgIrmDU2KpmEjLyY9FMheD2oDwIDAQAB");
-	// jsPath = encodeURIComponent("libs/hosted/1.3.1/zuora.js");
-	page_pageid = encodeURIComponent("2c92c0f97688b0f70176895647676917");
-	accountid = encodeURIComponent("");
-	gwOption = encodeURIComponent("");
-	customParams = encodeURIComponent("");
-	customSignatureParams = encodeURIComponent("");
+	// endpoint = encodeURIComponent("https://apisandbox.zuora.com/apps/v1/rsa-signatures");
+	// url = encodeURIComponent("https://apisandbox.zuora.com/apps/PublicHostedPageLite.do");
+	// // callbackurl = encodeURIComponent("/HPM2SampleCodeJSP/Callback.jsp");
+	// username = encodeURIComponent("dhan@zuora.com");
+	// password = encodeURIComponent("J2m_:2LM2gMiupz");
+	// publickey = encodeURIComponent("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsxXAXFZPpk+LTgU+OGVVBeReVfDHiTLXDXwxq4M0DpLDXKNyAb3z6anxUu4l6e5YcJpDEk4E+afI0vuFJTtNHm25DCyc+wrakVrlfZBrWOEPnQQ5da9v7iRlXl6rZM0gcCayQMM4RYQKQ8dCildSvtbmH3n4sr92VcObw67aK8odDlOe2pIPI2oG4V38Fvm7E5dAmLGqiYKCBeIuY1EjQ9DF2Ml75o2dhS+bVLjkjh34Z8vOXVOUoaVev6pR0ta8yhlKaKd1QZ3e9FxAY9JLmWwCcZwOJa/WXr4z41saSKXGQypiEUJ25yuF+uVbcgIrmDU2KpmEjLyY9FMheD2oDwIDAQAB");
+	// // jsPath = encodeURIComponent("libs/hosted/1.3.1/zuora.js");
+	// page_pageid = encodeURIComponent("2c92c0f97688b0f70176895647676917");
+	// accountid = encodeURIComponent("2c92c0f8768f563901768f8618065dbd");
+	// gwOption = encodeURIComponent("");
+	// customParams = encodeURIComponent("{\"doPayment\": \"true\",\"field_accountId\": \"2c92c0f8768f563901768f8618065dbd\", \"field_authorizationAmount\": \"88\", \"field_currency\": \"USD\"}");
+	// customSignatureParams = encodeURIComponent("{\"accountId\": \"2c92c0f8768f563901768f8618065dbd\",\"authorizationAmount\": \"88\", \"currency\": \"USD\"}");
 
 	window.location.replace("HomepageWithReconfig.jsp?URL="+url
 			+"&ENDPOINT="+endpoint
