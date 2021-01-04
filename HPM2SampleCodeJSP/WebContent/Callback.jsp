@@ -17,9 +17,9 @@ String newSignatureStr = "";
 			}
 			
 			// Submitting hosted page succeeded.
-			message = "<span id='paymentMethodId'>" + request.getParameter("refId") + "</span>";
+			message = "Hosted Page submitted successfully. The payment method id is " + request.getParameter("refId") + ".";
 			if (request.getParameter("PaymentId") != null) {
-				message += "<br><br>" + "<span id='paymentId'>" + request.getParameter("PaymentId") + "</span>";
+				message += "<br><br>" + "PaymentId:" + request.getParameter("PaymentId");
 			}
 		} else {
 			// Submitting hosted page failed.
