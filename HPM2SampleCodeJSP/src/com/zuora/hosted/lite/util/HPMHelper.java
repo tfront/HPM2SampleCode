@@ -426,7 +426,8 @@ public class HPMHelper {
 		}
 
 		// For 3DS test
-//        params.put("authorizationAmount", "36");
+		// set amount only if it is not present
+		params.putIfAbsent("authorizationAmount", "36");
 //        params.put("field_passthrough1", "Test_Value_Passthrough1");
 //        params.put("field_passthrough2", "Test_Value_Passthrough2");
         // For CCRef
